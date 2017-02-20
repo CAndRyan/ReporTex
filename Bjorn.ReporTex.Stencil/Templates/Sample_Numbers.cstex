@@ -1,0 +1,11 @@
+﻿\documentclass{article}
+\begin{document}
+
+@{int x = 6;}
+@for (int i = 1; i < x; i++) {
+	for (int j = 1; j < x; j++) {
+		@(String.Format("{0}\n", (i * j)))
+	}
+}
+
+\end{document}

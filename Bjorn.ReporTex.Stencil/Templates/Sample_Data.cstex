@@ -1,0 +1,20 @@
+﻿\documentclass{article}
+\begin{document}
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}\hline
+
+@{int num = 6;}
+@for (int i = 1; i < (num + 1); i++) {
+	for (int j = 1; j < (num + 1); j++) {
+        string x = String.Format("${0} \\times {1} = {2}$", i, j, (i * j));
+        if (j < num) {
+            @(String.Format("{0}&", x))
+        }
+        else {
+            @(String.Format("{0} \\\\ \n", x))
+        }
+    }
+}
+
+\hline\end{tabular}
+\end{document}
