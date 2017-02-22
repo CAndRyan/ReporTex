@@ -43,20 +43,36 @@ namespace Bjorn.ReporTex.Stencil {
         //    return GetRelativePath(AssemblyDirectory, referencePath);
         //}
 
-        public static string GetFilePath(string directory, string fileName, string extension) {
+        public static string GetFilePath(string directory, string fileName, string extension, bool forceExistence = false) {
             extension = extension.TrimStart();
             extension = extension.Replace(".", "");
 
-            return Path.Combine(directory, String.Format("{0}.{1}", fileName, extension));
+            return GetPath(directory, String.Format("{0}.{1}", fileName, extension), forceExistence);
+        }
+		
+		public static string GetPath(string path1, string path2, bool forceExistence = false) {
+			string path = Path.Combine(path1, path2);
+
+			if (forceExistence) {
+				CreatePath(path);
+			}
+
+			return path;
+		}
+
+		public static string CombineWithAssemblyPath(string path, bool forceExistence = false) {
+            return GetPath(AssemblyDirectory, path, forceExistence);
         }
 
-        public static string GetPath(string path1, string path2) {
-            return Path.Combine(path1, path2);
-        }
+		public static void CreatePath(string path) {		// could throw permission errors
+			Directory.CreateDirectory(path);
 
-        public static string CombineWithAssemblyPath(string path) {
-            return Path.Combine(AssemblyDirectory, path);
-        }
+			if (Path.HasExtension(path)) {
+				if (!File.Exists(path)) {
+					File.Create(path);
+				}
+			}
+		}
 
         public static string ReadFile(string path) {
             return File.ReadAllText(path);

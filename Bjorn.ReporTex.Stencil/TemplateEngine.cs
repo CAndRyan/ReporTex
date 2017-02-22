@@ -17,8 +17,8 @@ namespace Bjorn.ReporTex.Stencil {
     }
 
     public class Stencil : ITemplateEngine {
-        public static string TEMPLATE_DIRECTORY { get; } = SystemHelper.CombineWithAssemblyPath("Templates");
-        public static string OUTPUT_DIRECTORY { get; } = SystemHelper.CombineWithAssemblyPath("Built");
+        public static string TEMPLATE_DIRECTORY { get; } = SystemHelper.CombineWithAssemblyPath("Templates", true);
+        public static string OUTPUT_DIRECTORY { get; } = SystemHelper.CombineWithAssemblyPath("Built", true);
 
         public string TemplateDirectory { get; private set; } = TEMPLATE_DIRECTORY;
         public string OutputDirectory { get; private set; } = OUTPUT_DIRECTORY;

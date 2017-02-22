@@ -19,7 +19,7 @@ namespace Bjorn.ReporTex.Stencil {
     }
 
     public class Converter : IConverter {
-        public static string OUTPUT_DIRECTORY { get; } = SystemHelper.CombineWithAssemblyPath("Built");
+        public static string OUTPUT_DIRECTORY { get; } = SystemHelper.CombineWithAssemblyPath("Built", true);
         public static string PDFLATEX_EXE_PATH { get; } = "C:\\Program Files\\MiKTeX 2.9\\miktex\\bin\\x64\\pdflatex.exe";
         public static int TIMEOUT_MS { get; } = 30000; // 30 seconds
 
@@ -74,11 +74,13 @@ namespace Bjorn.ReporTex.Stencil {
             consoleOutput = SystemHelper.ExecuteShellCommand(PDFLATEX_EXE_PATH, parameters, TimeoutMs);
             IEnumerable<IFile> buildFiles = SystemHelper.GetFileInfo(OutputDirectory, source.Name);
 
-            Regex regex = new Regex(@"Output written on ""([^""]*)""");
+            Regex regex = new Regex(@"Output written on ""([^""]*)""|Output written on ([^\s]*)\s");
             Match match = regex.Match(consoleOutput);
 
             if (match.Success) {
-                built = new BuiltFile(match.Groups[1].Value, source, buildFiles);
+				string matched = String.IsNullOrEmpty(match.Groups[1].Value) ? match.Groups[2].Value : match.Groups[1].Value;
+
+				built = new BuiltFile(matched, source, buildFiles);
             }
             else {  //fixme - consider removing
                 built = new BuiltFile(SystemHelper.GetFilePath(OutputDirectory, source.Name, "tex"), source);
